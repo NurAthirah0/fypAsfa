@@ -10,7 +10,7 @@ model_data = {
     "features": list(X_train.columns)  # Use DataFrame column names
 }
 
-with open('random_forest_with_features.pkl', 'wb') as file:
+with open('random_forest.pkl', 'wb') as file:
     pickle.dump(model_data, file)
 
 # App title
