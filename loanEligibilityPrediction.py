@@ -1,10 +1,17 @@
 import streamlit as st
 import pickle
 import numpy as np
+import pickle
+import pandas as pd
 
-# Load the trained model
-with open('random_forest.pkl', 'rb') as file:
-    model = pickle.load(file)
+# Save features with the model
+model_data = {
+    "model": trained_random_forest,
+    "features": list(X_train.columns)  # Use DataFrame column names
+}
+
+with open('random_forest_with_features.pkl', 'wb') as file:
+    pickle.dump(model_data, file)
 
 # App title
 st.title("Loan Eligibility Prediction")
