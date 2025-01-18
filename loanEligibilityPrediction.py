@@ -30,9 +30,13 @@ married_mapping = {"Yes": 1, "No": 0}
 education_mapping = {"Graduate": 1, "Not Graduate": 0}
 self_employed_mapping = {"Yes": 1, "No": 0}
 
+# Expand input preprocessing
+gender_encoded = [1, 0] if gender == "Male" else [0, 1]  # One-hot encoding
+married_encoded = [1, 0] if married == "Yes" else [0, 1]
+
 input_data = np.array([
-    gender_mapping[gender],
-    married_mapping[married],
+    *gender_encoded,
+    *married_encoded,
     education_mapping[education],
     self_employed_mapping[self_employed],
     applicant_income,
