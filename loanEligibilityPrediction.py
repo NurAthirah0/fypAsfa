@@ -1,63 +1,54 @@
 import streamlit as st
-import pickle
 import numpy as np
-import pickle
 import pandas as pd
+import joblib
 
-# Save features with the model
-model_data = {
-    "model": trained_random_forest,
-    "features": list(X_train.columns)  # Use DataFrame column names
-}
 
-with open('random_forest.pkl', 'wb') as file:
-    pickle.dump(model_data, file)
+model= joblib.load('lr_model.joblib')
 
-# App title
-st.title("Loan Eligibility Prediction")
+st.title('Loan Eligibility Prediction:bank:')
 
-# Input features
-st.header("Enter Applicant Details:")
-gender = st.selectbox("Gender", ["Male", "Female"])
-married = st.selectbox("Married", ["Yes", "No"])
-education = st.selectbox("Education", ["Graduate", "Not Graduate"])
-self_employed = st.selectbox("Self-Employed", ["Yes", "No"])
-applicant_income = st.number_input("Applicant Income", min_value=0)
-coapplicant_income = st.number_input("Coapplicant Income", min_value=0)
-loan_amount = st.number_input("Loan Amount", min_value=0)
-loan_amount_term = st.select_slider('Loan Amount Term (in years)',['1','3','5','7',
-                                   '10','15','20','25','30','40'])
-credit_history = st.selectbox("Credit History", [1.0, 0.0])
-property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
+Gender= st.selectbox('Gender',('Male','Female'))
+Married= st.selectbox('Married',('No','Yes'))
+Dependents= st.selectbox('Number Of Dependents',('0','1','2','3 or More Dependents'))
+Education= st.selectbox('Education status',('Graduate','Not Graduate'))
+Self_Employed= st.selectbox('Self Employed',('No','Yes'))
+ApplicantIncome= st.number_input('Applicant Income',0)
+CoapplicantIncome= st.number_input('Coapplicant Income',0)
+LoanAmount= st.number_input('Loan Amount',0)
+Loan_Amount_Term= st.select_slider('Loan Amount Term',['1 YEAR','3 YEARS','5 YEARS','7 YEARS',
+                                   '10 YEARS','15 YEARS','20 YEARS','25 YEARS','30 YEARS','40 YEARS'])
+Credit_History= st.select_slider('Credit History 1 for Good 0 for Bad',[0,1])
+Property_Area= st.selectbox('Area of Property',('Urban','Rural','Semiurban'))
 
-# Preprocess input
-property_area_mapping = {"Urban": 0, "Semiurban": 1, "Rural": 2}
-gender_mapping = {"Male": 0, "Female": 1}
-married_mapping = {"Yes": 1, "No": 0}
-education_mapping = {"Graduate": 1, "Not Graduate": 0}
-self_employed_mapping = {"Yes": 1, "No": 0}
 
-# Expand input preprocessing
-gender_encoded = [1, 0] if gender == "Male" else [0, 1]  # One-hot encoding
-married_encoded = [1, 0] if married == "Yes" else [0, 1]
+columns= ['Gender','Married','Dependents','Education','Self_Employed','ApplicantIncome','CoapplicantIncome',
+          'LoanAmount','Loan_Amount_Term','Credit_History','Property_Area']
 
-input_data = np.array([
-    *gender_encoded,
-    *married_encoded,
-    education_mapping[education],
-    self_employed_mapping[self_employed],
-    applicant_income,
-    coapplicant_income,
-    loan_amount,
-    loan_amount_term,
-    credit_history,
-    property_area_mapping[property_area],
-]).reshape(1, -1)
+def predict():
+    col= np.array([Gender,Married,Dependents,Education,Self_Employed,
+                   ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,Credit_History,Property_Area])
+    data= pd.DataFrame([col],columns=columns)
+    prediction= model.predict(data)[0]
 
-# Predict and display result
-if st.button("Predict Loan Eligibility"):
-    prediction = model.predict(input_data)
-    if prediction[0] == 1:
-        st.success("Loan Approved!")
+
+    if prediction == 1:
+        st.success('You Can Get The Loan:thumbsup:')
     else:
-        st.error("Loan Rejected.")
+        st.error('Sorry You Cant Get The Loan:thumbsdown:')
+
+
+m = st.markdown("""
+<style>
+div.stButton > button:first-child {
+    background-color: #0099ff;
+    color:#ffffff;
+}
+div.stButton > button:hover {
+    background-color: #00ff00;
+    color:#ff0000;
+    }
+</style>""", unsafe_allow_html=True)
+
+
+st.button('Predict',on_click=predict)
