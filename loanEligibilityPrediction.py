@@ -18,7 +18,8 @@ self_employed = st.selectbox("Self-Employed", ["Yes", "No"])
 applicant_income = st.number_input("Applicant Income", min_value=0)
 coapplicant_income = st.number_input("Coapplicant Income", min_value=0)
 loan_amount = st.number_input("Loan Amount", min_value=0)
-loan_amount_term = st.number_input("Loan Amount Term (in days)", min_value=0)
+loan_amount_term = st.select_slider('Loan Amount Term (in years)',['1','3','5','7',
+                                   '10','15','20','25','30','40'])
 credit_history = st.selectbox("Credit History", [1.0, 0.0])
 property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
 
