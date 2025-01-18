@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 
 # Load the trained model
-with open('logistic_regression_model.pkl', 'rb') as file:
+with open('random_forest.pkl', 'rb') as file:
     model = pickle.load(file)
 
 # App title
