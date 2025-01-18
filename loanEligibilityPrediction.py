@@ -28,7 +28,7 @@ def predict():
     col= np.array([Gender,Married,Dependents,Education,Self_Employed,
                    ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,Credit_History,Property_Area])
     data= pd.DataFrame([col],columns=columns)
-    prediction= model.predict(model)[0]
+    prediction= model.predict(data)
 
 
     if prediction == 1:
